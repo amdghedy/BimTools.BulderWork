@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Name>Revit Sleeve Tools - Documentation</Name>
+    <Assembly>INSTALLER_REPLACES_THIS_PATH</Assembly>
+    <AddInId>D31A3D1A-4C26-4C95-9C5C-7E2D02C0A102</AddInId>
+    <FullClassName>RevitSleeveDocumentation.Command</FullClassName>
+    <VendorId>AMDG</VendorId>
+    <VendorDescription>BIM Tools - Revit Sleeve Tools</VendorDescription>
+  </AddIn>
+</RevitAddIns>
