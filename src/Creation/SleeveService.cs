@@ -20,6 +20,15 @@ namespace RevitSleeveAddin
         private const double DEFAULT_CLEARANCE = 0.0065616797900262466; // ~2 mm
         private const double MERGE_DISTANCE_FT = 0.3280839895; // 10 cm – merge openings closer than this
 
+        private static long GetElementIdValue(ElementId id)
+        {
+#if REVIT2026_OR_GREATER
+            return id.Value;
+#else
+            return id.IntegerValue;
+#endif
+        }
+
         private class MepCurveData
         {
             public MEPCurve Element { get; set; }
@@ -229,7 +238,7 @@ namespace RevitSleeveAddin
                 if (faceRef == null)
                 {
                     log.AppendLine("Found intersection but could not find suitable face on "
-                        + (isFloor ? "Floor " : "Wall ") + host.Id.IntegerValue + ".");
+                        + (isFloor ? "Floor " : "Wall ") + GetElementIdValue(host.Id) + ".");
                     continue;
                 }
 
@@ -1115,7 +1124,7 @@ namespace RevitSleeveAddin
         {
             // Cable trays – use dedicated parameters first (avoid wrong connector size)
             if (mep is CableTray || (mep.Category != null &&
-                mep.Category.Id.IntegerValue == (int)BuiltInCategory.OST_CableTray))
+                GetElementIdValue(mep.Category.Id) == (int)BuiltInCategory.OST_CableTray))
             {
                 Parameter tw = mep.get_Parameter(BuiltInParameter.RBS_CABLETRAY_WIDTH_PARAM)
                             ?? mep.LookupParameter("Width");
