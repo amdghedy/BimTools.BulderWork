@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <RevitVersion Condition="'$(RevitVersion)' == ''">2020</RevitVersion>
+    <TargetFramework Condition="'$(RevitVersion)' &lt;= '2024'">net48</TargetFramework>
+    <TargetFramework Condition="'$(RevitVersion)' == '2025' Or '$(RevitVersion)' == '2026'">net8.0-windows</TargetFramework>
+    <TargetFramework Condition="'$(RevitVersion)' == '2027'">net10.0-windows</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
     <OutputType>Library</OutputType>
@@ -11,18 +14,33 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <RevitPath>C:\Program Files\Autodesk\Revit 2020</RevitPath>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2020'">
+    <RevitApiPackageVersion>2020.2.90</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2021'">
+    <RevitApiPackageVersion>2021.1.100</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2022'">
+    <RevitApiPackageVersion>2022.1.80</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2023'">
+    <RevitApiPackageVersion>2023.1.90</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2024'">
+    <RevitApiPackageVersion>2024.3.60</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2025'">
+    <RevitApiPackageVersion>2025.4.60</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2026'">
+    <RevitApiPackageVersion>2026.4.10</RevitApiPackageVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(RevitVersion)' == '2027'">
+    <RevitApiPackageVersion>2027.3.0</RevitApiPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="RevitAPI">
-      <HintPath>$(RevitPath)\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI">
-      <HintPath>$(RevitPath)\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitApiPackageVersion)" />
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitApiPackageVersion)" />
   </ItemGroup>
 </Project>
