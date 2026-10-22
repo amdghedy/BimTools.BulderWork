@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -146,3 +146,52 @@ jobs:
           path: artifacts/RevitSleeveTools-Revit-${{ matrix.revit-version }}/*
           if-no-files-found: error
           retention-days: 90
+
+  publish-version-folders:
+    name: Publish compiled DLL folders to repository
+    runs-on: windows-latest
+    needs: build
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download all version packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: RevitSleeveTools-Revit-*
+          path: downloaded-packages
+          merge-multiple: false
+
+      - name: Create Revit version folders with compiled DLLs and add-ins
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $versions = @('2020','2021','2022','2023','2024','2025','2026','2027')
+          foreach ($version in $versions) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "downloaded-packages/RevitSleeveTools-Revit-$version"
+            if (-not (Test-Path $source)) {
+              throw "Build artifact for Revit $version is missing: $source"
+            }
+            $destination = Join-Path $env:GITHUB_WORKSPACE "Revit Versions/Revit $version"
+            New-Item -ItemType Directory -Path $destination -Force | Out-Null
+            Copy-Item (Join-Path $source '*') $destination -Force
+            Write-Host "Published folder: $destination"
+          }
+
+      - name: Commit compiled version folders
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "Revit Versions"
+          if (git diff --cached --quiet) {
+            Write-Host "No compiled binaries or manifests changed."
+            exit 0
+          }
+          git commit -m "Publish compiled Revit Sleeve Tools for Revit 2020-2027"
+          git push origin HEAD:main
