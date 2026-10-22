@@ -49,6 +49,32 @@ jobs:
           New-Item -ItemType Directory -Path $package -Force | Out-Null
           Copy-Item "src/Creation/bin/Release/RevitSleeveAddin.dll" $package
           Copy-Item "src/Documentation/bin/Release/RevitSleeveDocumentation.dll" $package
+          @'
+          <?xml version="1.0" encoding="utf-8" standalone="no"?>
+          <RevitAddIns>
+            <AddIn Type="Command">
+              <Name>Revit Sleeve Tools - Create Sleeves</Name>
+              <Assembly>INSTALLER_REPLACES_THIS_PATH</Assembly>
+              <AddInId>D31A3D1A-4C26-4C95-9C5C-7E2D02C0A101</AddInId>
+              <FullClassName>RevitSleeveAddin.Command</FullClassName>
+              <VendorId>AMDG</VendorId>
+              <VendorDescription>BIM Tools - Revit Sleeve Tools</VendorDescription>
+            </AddIn>
+          </RevitAddIns>
+          '@ | Set-Content (Join-Path $package 'RevitSleeveTools-Create.addin') -Encoding UTF8
+          @'
+          <?xml version="1.0" encoding="utf-8" standalone="no"?>
+          <RevitAddIns>
+            <AddIn Type="Command">
+              <Name>Revit Sleeve Tools - Documentation</Name>
+              <Assembly>INSTALLER_REPLACES_THIS_PATH</Assembly>
+              <AddInId>D31A3D1A-4C26-4C95-9C5C-7E2D02C0A102</AddInId>
+              <FullClassName>RevitSleeveDocumentation.Command</FullClassName>
+              <VendorId>AMDG</VendorId>
+              <VendorDescription>BIM Tools - Revit Sleeve Tools</VendorDescription>
+            </AddIn>
+          </RevitAddIns>
+          '@ | Set-Content (Join-Path $package 'RevitSleeveTools-Documentation.addin') -Encoding UTF8
           @"
           # Revit Sleeve Tools installer
           # Run this script on the target Windows account. Revit must be closed.
@@ -96,6 +122,8 @@ jobs:
           Files:
           - RevitSleeveAddin.dll
           - RevitSleeveDocumentation.dll
+          - RevitSleeveTools-Create.addin (template; installer writes the valid local assembly path)
+          - RevitSleeveTools-Documentation.addin (template; installer writes the valid local assembly path)
           - Install-RevitSleeveTools.ps1
 
           Installation:
