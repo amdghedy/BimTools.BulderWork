@@ -1,0 +1,51 @@
+name: Build Revit Sleeve Tools (2020-2027)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Revit ${{ matrix.revit-version }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        revit-version: ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027']
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore solution
+        run: dotnet restore .\RevitSleeveTools_2020_WPF.sln -p:RevitVersion=${{ matrix.revit-version }}
+
+      - name: Build solution
+        run: dotnet build .\RevitSleeveTools_2020_WPF.sln --configuration Release --no-restore -p:RevitVersion=${{ matrix.revit-version }}
+
+      - name: Upload compiled add-ins
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: RevitSleeveTools-Revit-${{ matrix.revit-version }}
+          path: |
+            src/Creation/bin/Release/*.dll
+            src/Documentation/bin/Release/*.dll
+          if-no-files-found: error
+          retention-days: 30
