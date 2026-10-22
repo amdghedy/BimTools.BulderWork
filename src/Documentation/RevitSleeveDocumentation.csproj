@@ -14,6 +14,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(RevitVersion)' == '2026' Or '$(RevitVersion)' == '2027'">
+    <DefineConstants>$(DefineConstants);REVIT2026_OR_GREATER</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(RevitVersion)' == '2020'">
     <RevitApiPackageVersion>2020.2.90</RevitApiPackageVersion>
   </PropertyGroup>
