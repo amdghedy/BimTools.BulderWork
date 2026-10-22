@@ -13,6 +13,15 @@ namespace RevitSleeveDocumentation
     /// </summary>
     public static class DocService
     {
+        private static long GetElementIdValue(ElementId id)
+        {
+#if REVIT2026_OR_GREATER
+            return id.Value;
+#else
+            return id.IntegerValue;
+#endif
+        }
+
         private static readonly string[] TargetFamilies =
         {
             "WallOpening_Round",
@@ -87,7 +96,7 @@ namespace RevitSleeveDocumentation
             ViewSection section = ViewSection.CreateSection(doc, sectionType.Id, bbox);
             if (section == null) return;
 
-            string name = string.Format("Sleeve_{0}_{1}_{2}", index, roomName ?? "Unknown", sleeve.Id.IntegerValue);
+            string name = string.Format("Sleeve_{0}_{1}_{2}", index, roomName ?? "Unknown", GetElementIdValue(sleeve.Id));
             // Make name unique
             int suffix = 1;
             string finalName = name;
