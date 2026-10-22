@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Revit Sleeve Tools (Creation)</Name>
+    <Assembly>RevitSleeveAddin.dll</Assembly>
+    <ClientId>A1B2C3D4-E5F6-7890-1234-56789ABCDEF0</ClientId>
+    <FullClassName>RevitSleeveAddin.App</FullClassName>
+    <VendorId>ADSK</VendorId>
+    <VendorDescription>Sleeve Creation Tools</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Revit Sleeve Tools (Documentation)</Name>
+    <Assembly>RevitSleeveDocumentation.dll</Assembly>
+    <ClientId>F0E1D2C3-B4A5-9876-5432-10FEDCBA9876</ClientId>
+    <FullClassName>RevitSleeveDocumentation.App</FullClassName>
+    <VendorId>ADSK</VendorId>
+    <VendorDescription>Sleeve Documentation Tools</VendorDescription>
+  </AddIn>
+</RevitAddIns>
