@@ -1163,7 +1163,7 @@ namespace RevitSleeveAddin
                 return true;
             if (mep.Category != null)
             {
-                int catId = (int)mep.Category.Id.IntegerValue;
+                int catId = (int)GetElementIdValue(mep.Category.Id);
                 if (catId == (int)BuiltInCategory.OST_CableTray
                     || catId == (int)BuiltInCategory.OST_DuctCurves)
                     return false;
